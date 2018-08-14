@@ -32,11 +32,11 @@ class MysqlHandler(object):
         except Exception as e:
             raise Exception('MySQL ERROR:', e)
 
-    def insert(self, level, name, pre_id, code,ss):
+    def insertStreet(self,town_id, street_code, street_category, street_name):
         try:
             with self.db.cursor() as cursor:
-                cursor.execute('INSERT INTO town (town_name, county_id, town_code) VALUES (%s, %s, %s)'
-                               , [name, pre_id, code])
+                cursor.execute('INSERT INTO street (town_id, street_code, street_category,street_name) VALUES (%s, %s, %s,%s)'
+                               , [town_id, street_code, street_category,street_name])
             insert_id = cursor.lastrowid
             self.db.commit()
             # 返回存储后的id

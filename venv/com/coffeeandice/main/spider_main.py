@@ -56,7 +56,7 @@ class CodeSpider(object):
                     html_content = self.html_downloader.download(downloading_url)
                     self.county_url_list = self.html_parser.county_parser(html_content, self.split_url + province_code + "/")
                     for county_name, county_url, county_code in self.county_url_list:
-                        time.sleep(5)
+                        time.sleep(1)
                         county_id = self.mysql_handler.insert(3, county_name, city_id, county_code)
                         if county_url is None:
                             continue
@@ -67,13 +67,13 @@ class CodeSpider(object):
                         for town_name, town_url, town_code in self.town_url_list:
                             # 输出抓取到的乡镇街道的名称、链接（实际不需要）、编号代码
                             print(town_name, town_url, town_code)
-                            self.mysql_handler.insert(4, town_name, county_id, town_code)
+                            town_id = self.mysql_handler.insert(4, town_name, county_id, town_code)
                             downloading_url = town_url
                             html_content = self.html_downloader.download(downloading_url)
                             self.street_list = self.html_parser.street_parser(html_content)
                             for street_code, street_category, street_name in self.street_list:
                                 print(street_code, street_category, street_name)
-                                self.mysql_handler.insert(5, street_code, street_category, street_name)
+                                self.mysql_handler.insertStreet(town_id, street_code, street_category, street_name)
 
             self.mysql_handler.close()
         except Exception as e:
